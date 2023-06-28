@@ -1,25 +1,44 @@
 from graphics import *
 
-def draw_line(win, start, end, colour):
+def drawLine(win, start, end, colour):
     line = Line(start, end)
     line.setFill(colour)
     line.setWidth(7)
     line.draw(win)
 
-def draw_rectangle(win, start, end, colour):
+def drawRectangle(win, start, end, colour):
     rectangle = Rectangle(start, end)
     rectangle.setFill(colour)
     rectangle.draw(win)
 
-def draw_circle(win, center, radius, colour):
+def drawCircle(win, center, radius, colour):
     circle = Circle(center, radius)
     circle.setFill(colour)
     circle.draw(win)
 
-def draw_triangle(win, p1, p2, p3, colour):
+def drawTriangle(win, p1, p2, p3, colour):
     triangle = Polygon(p1, p2, p3)
     triangle.setFill(colour)
     triangle.draw(win)
+
+def circleOverlapMenu(circle, menuBarRectangle):
+    center = circle.getCenter()
+    radius = circle.getRadius()
+
+    x1 = center.getX() - radius
+    y1 = center.getY() - radius
+    x2 = center.getX() + radius
+    y2 = center.getY() + radius
+
+    # Check if any part of the circle is inside the menu bar
+    if x1 <= menuBarRectangle.getP2().getX() and \
+            x2 >= menuBarRectangle.getP1().getX() and \
+            y1 <= menuBarRectangle.getP2().getY() and \
+            y2 >= menuBarRectangle.getP1().getY():
+        return True
+    else:
+        return False
+
 
 
 def main():
@@ -101,7 +120,7 @@ def main():
     blackBtnText.setTextColor("white")
     blackBtnText.draw(win)
 
-    currentColor = "black"
+    currentColour = "black"
     currentTool = "line"
 
     startPoint = None
@@ -126,7 +145,7 @@ def main():
 
         if rectBtn.getP1().getX() <= clickPoint.getX() <= rectBtn.getP2().getX() and \
                 rectBtn.getP1().getY() <= clickPoint.getY() <= rectBtn.getP2().getY():
-            current_tool = "rectangle"
+            currentTool = "rectangle"
             rectText.setText("Rect (S)")
             circleText.setText("Circle")
             triangleText.setText("Triangle")
@@ -136,7 +155,7 @@ def main():
 
         if circleBtn.getP1().getX() <= clickPoint.getX() <= circleBtn.getP2().getX() and \
                 circleBtn.getP1().getY() <= clickPoint.getY() <= circleBtn.getP2().getY():
-            current_tool = "circle"
+            currentTool = "circle"
             rectText.setText("Rectangle")
             circleText.setText("Circle (S)")
             triangleText.setText("Triangle")
@@ -146,7 +165,7 @@ def main():
 
         if triangleBtn.getP1().getX() <= clickPoint.getX() <= triangleBtn.getP2().getX() and \
                 triangleBtn.getP1().getY() <= clickPoint.getY() <= triangleBtn.getP2().getY():
-            current_tool = "triangle"
+            currentTool = "triangle"
             rectText.setText("Rectangle")
             circleText.setText("Circle")
             triangleText.setText("Triangle (S)")
@@ -156,7 +175,7 @@ def main():
 
         if eraseBtn.getP1().getX() <= clickPoint.getX() <= eraseBtn.getP2().getX() and \
                 eraseBtn.getP1().getY() <= clickPoint.getY() <= eraseBtn.getP2().getY():
-            current_tool = "erase"
+            currentTool = "erase"
             rectText.setText("Rectangle")
             circleText.setText("Circle")
             triangleText.setText("Triangle")
@@ -166,7 +185,7 @@ def main():
 
         if redBtn.getP1().getX() <= clickPoint.getX() <= redBtn.getP2().getX() and \
                 redBtn.getP1().getY() <= clickPoint.getY() <= redBtn.getP2().getY():
-            current_color = "red"
+            currentColour = "red"
             greenBtnText.setText("Green")
             blueBtnText.setText("Blue")
             yellowBtnText.setText("Yellow")
@@ -177,7 +196,7 @@ def main():
 
         if greenBtn.getP1().getX() <= clickPoint.getX() <= greenBtn.getP2().getX() and \
                 greenBtn.getP1().getY() <= clickPoint.getY() <= greenBtn.getP2().getY():
-            current_color = "green"
+            currentColour = "green"
             greenBtnText.setText("Green (S)")
             blueBtnText.setText("Blue")
             yellowBtnText.setText("Yellow")
@@ -188,7 +207,7 @@ def main():
 
         if blueBtn.getP1().getX() <= clickPoint.getX() <= blueBtn.getP2().getX() and \
                 blueBtn.getP1().getY() <= clickPoint.getY() <= blueBtn.getP2().getY():
-            current_color = "blue"
+            currentColour = "blue"
             greenBtnText.setText("Green")
             yellowBtnText.setText("Yellow")
             orangeBtnText.setText("Orange")
@@ -199,7 +218,7 @@ def main():
 
         if yellowBtn.getP1().getX() <= clickPoint.getX() <= yellowBtn.getP2().getX() and \
                 yellowBtn.getP1().getY() <= clickPoint.getY() <= yellowBtn.getP2().getY():
-            current_color = "yellow"
+            currentColour = "yellow"
             greenBtnText.setText("Green")
             blueBtnText.setText("Blue")
             orangeBtnText.setText("Orange")
@@ -210,7 +229,7 @@ def main():
 
         if orangeBtn.getP1().getX() <= clickPoint.getX() <= orangeBtn.getP2().getX() and \
                 orangeBtn.getP1().getY() <= clickPoint.getY() <= orangeBtn.getP2().getY():
-            current_color = "orange"
+            currentColour = "orange"
             greenBtnText.setText("Green")
             blueBtnText.setText("Blue")
             yellowBtnText.setText("Yellow")
@@ -221,7 +240,7 @@ def main():
 
         if blackBtn.getP1().getX() <= clickPoint.getX() <= blackBtn.getP2().getX() and \
                 blackBtn.getP1().getY() <= clickPoint.getY() <= blackBtn.getP2().getY():
-            current_color = "black"
+            currentColour = "black"
             greenBtnText.setText("Green")
             greenBtnText.setText("Blue")
             yellowBtnText.setText("Yellow")
@@ -230,5 +249,70 @@ def main():
             redBtnText.setText("Red")
             continue
 
+        if currentTool is None:
+            continue
 
+        if currentTool == "line":
+            if 0 <= clickPoint.getX() <= 78 and 0 <= clickPoint.getY() <= winHeight:
+                continue
+            if startPoint is None:
+                startPoint = clickPoint
+            else:
+                drawLine(win, startPoint, clickPoint, currentColour)
+                startPoint = None
+
+        elif currentTool == "rectangle":
+            if 0 <= clickPoint.getX() <= 78 and 0 <= clickPoint.getY() <= winHeight:
+                continue
+            if startPoint is None:
+                startPoint = clickPoint
+            else:
+                drawRectangle(win, startPoint, clickPoint, currentColour)
+                startPoint = None
+
+        elif currentTool == "circle":
+            if 0 <= clickPoint.getX() <= 78 and 0 <= clickPoint.getY() <= winHeight:
+                continue
+            if startPoint is None:
+                startPoint = clickPoint
+            else:
+                radius = abs(startPoint.getX() - clickPoint.getX())
+                circle = Circle(startPoint, radius)
+                if circleOverlapMenu(circle, menuBarRectangle):
+                    circleText_big = Text(Point(400, 50), "Circle too big!")
+                    circleText_big.draw(win)
+                    circleText_big.setSize(20)
+                    circleText_big.setStyle("bold")
+                    time.sleep(0.25)  # Make the thread sleep for 0.25s. This has some drawbacks, but will do for now.
+                    circleText_big.setFill("red") # Wake back up to swap colour, in case covered.
+                    time.sleep(0.25) # Let thread sleep again, then
+                    circleText_big.undraw() # Undraw the text.
+                    print("circle too big")
+                else:
+                    drawCircle(win, startPoint, radius, currentColour)
+
+                startPoint = None
+
+        elif currentTool == "triangle":
+            if 0 <= clickPoint.getX() <= 78 and 0 <= clickPoint.getY() <= winHeight:
+                continue
+            if startPoint is None:
+                startPoint = clickPoint
+            elif startPoint is not None:
+                secondPoint = clickPoint
+                drawTriangle(win, startPoint, Point(startPoint.getX(), secondPoint.getY()), secondPoint, currentColour)
+                startPoint = None
+
+        elif currentTool == "erase":
+            if 0 <= clickPoint.getX() <= 78 and 0 <= clickPoint.getY() <= winHeight:
+                continue
+
+            items = win.find_overlapping(clickPoint.getX(), clickPoint.getY(), clickPoint.getX(), clickPoint.getY())
+
+            for item in items:
+                win.delete(item)
+
+
+# Calls main function
 main()
+
