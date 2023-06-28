@@ -164,5 +164,16 @@ def main():
             eraseText.setText("Erase (S)")
             continue
 
+        if redBtn.getP1().getX() <= clickPoint.getX() <= redBtn.getP2().getX() and \
+                redBtn.getP1().getY() <= clickPoint.getY() <= redBtn.getP2().getY():
+            current_color = "red"
+            greenBtnText.setText("Green")
+            blueBtnText.setText("Blue")
+            yellowBtnText.setText("Yellow")
+            orangeBtnText.setText("Orange")
+            blackBtnText.setText("Black")
+            redBtnText.setText("Red (S)")
+            continue
+
 
 main()
