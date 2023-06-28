@@ -175,5 +175,60 @@ def main():
             redBtnText.setText("Red (S)")
             continue
 
+        if greenBtn.getP1().getX() <= clickPoint.getX() <= greenBtn.getP2().getX() and \
+                greenBtn.getP1().getY() <= clickPoint.getY() <= greenBtn.getP2().getY():
+            current_color = "green"
+            greenBtnText.setText("Green (S)")
+            blueBtnText.setText("Blue")
+            yellowBtnText.setText("Yellow")
+            orangeBtnText.setText("Orange")
+            blackBtnText.setText("Black")
+            redBtnText.setText("Red")
+            continue
+
+        if blueBtn.getP1().getX() <= clickPoint.getX() <= blueBtn.getP2().getX() and \
+                blueBtn.getP1().getY() <= clickPoint.getY() <= blueBtn.getP2().getY():
+            current_color = "blue"
+            greenBtnText.setText("Green")
+            yellowBtnText.setText("Yellow")
+            orangeBtnText.setText("Orange")
+            blueBtnText.setText("Blue (S)")
+            blackBtnText.setText("Black")
+            redBtnText.setText("Red")
+            continue
+
+        if yellowBtn.getP1().getX() <= clickPoint.getX() <= yellowBtn.getP2().getX() and \
+                yellowBtn.getP1().getY() <= clickPoint.getY() <= yellowBtn.getP2().getY():
+            current_color = "yellow"
+            greenBtnText.setText("Green")
+            blueBtnText.setText("Blue")
+            orangeBtnText.setText("Orange")
+            yellowBtnText.setText("Yellow (S)")
+            blackBtnText.setText("Black")
+            redBtnText.setText("Red")
+            continue
+
+        if orangeBtn.getP1().getX() <= clickPoint.getX() <= orangeBtn.getP2().getX() and \
+                orangeBtn.getP1().getY() <= clickPoint.getY() <= orangeBtn.getP2().getY():
+            current_color = "orange"
+            greenBtnText.setText("Green")
+            blueBtnText.setText("Blue")
+            yellowBtnText.setText("Yellow")
+            orangeBtnText.setText("Orange (S)")
+            blackBtnText.setText("Black")
+            redBtnText.setText("Red")
+            continue
+
+        if blackBtn.getP1().getX() <= clickPoint.getX() <= blackBtn.getP2().getX() and \
+                blackBtn.getP1().getY() <= clickPoint.getY() <= blackBtn.getP2().getY():
+            current_color = "black"
+            greenBtnText.setText("Green")
+            greenBtnText.setText("Blue")
+            yellowBtnText.setText("Yellow")
+            orangeBtnText.setText("Orange")
+            blackBtnText.setText("Black (S)")
+            redBtnText.setText("Red")
+            continue
+
 
 main()
