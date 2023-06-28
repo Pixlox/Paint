@@ -101,7 +101,68 @@ def main():
     blackBtnText.setTextColor("white")
     blackBtnText.draw(win)
 
-    win.getMouse()
-    win.close()
+    currentColor = "black"
+    currentTool = "line"
+
+    startPoint = None
+
+    while True:
+
+        try:
+            clickPoint = win.getMouse()
+        except:
+            print("Window is closed now, can't really fetch mouse clicks anymore...")
+            exit()
+
+        if lineBtn.getP1().getX() <= clickPoint.getX() <= lineBtn.getP2().getX() and \
+                lineBtn.getP1().getY() <= clickPoint.getY() <= lineBtn.getP2().getY():
+            currentTool = "line"
+            rectText.setText("Rectangle")
+            circleText.setText("Circle")
+            triangleText.setText("Triangle")
+            eraseText.setText("Erase")
+            lineText.setText("Line (S)")
+            continue
+
+        if rectBtn.getP1().getX() <= clickPoint.getX() <= rectBtn.getP2().getX() and \
+                rectBtn.getP1().getY() <= clickPoint.getY() <= rectBtn.getP2().getY():
+            current_tool = "rectangle"
+            rectText.setText("Rect (S)")
+            circleText.setText("Circle")
+            triangleText.setText("Triangle")
+            eraseText.setText("Erase")
+            lineText.setText("Line")
+            continue
+
+        if circleBtn.getP1().getX() <= clickPoint.getX() <= circleBtn.getP2().getX() and \
+                circleBtn.getP1().getY() <= clickPoint.getY() <= circleBtn.getP2().getY():
+            current_tool = "circle"
+            rectText.setText("Rectangle")
+            circleText.setText("Circle (S)")
+            triangleText.setText("Triangle")
+            eraseText.setText("Erase")
+            lineText.setText("Line")
+            continue
+
+        if triangleBtn.getP1().getX() <= clickPoint.getX() <= triangleBtn.getP2().getX() and \
+                triangleBtn.getP1().getY() <= clickPoint.getY() <= triangleBtn.getP2().getY():
+            current_tool = "triangle"
+            rectText.setText("Rectangle")
+            circleText.setText("Circle")
+            triangleText.setText("Triangle (S)")
+            eraseText.setText("Erase")
+            lineText.setText("Line")
+            continue
+
+        if eraseBtn.getP1().getX() <= clickPoint.getX() <= eraseBtn.getP2().getX() and \
+                eraseBtn.getP1().getY() <= clickPoint.getY() <= eraseBtn.getP2().getY():
+            current_tool = "erase"
+            rectText.setText("Rectangle")
+            circleText.setText("Circle")
+            triangleText.setText("Triangle")
+            lineText.setText("Line")
+            eraseText.setText("Erase (S)")
+            continue
+
 
 main()
