@@ -6,43 +6,54 @@ def drawLine(win, start, end, width, colour):
     line.setFill(colour)
     line.setWidth(width)
     line.draw(win)
+    # Add the line to the items array
+    return line
+
 
 # Custom function to draw a rectangle
 def drawRectangle(win, start, end, colour):
     rectangle = Rectangle(start, end)
     rectangle.setFill(colour)
     rectangle.draw(win)
-
+    # Add the rectangle to the items array
+    return rectangle
 # Custom function to draw a circle
 def drawCircle(win, center, radius, colour):
     circle = Circle(center, radius)
     circle.setFill(colour)
     circle.draw(win)
+    # Add the circle to the items array
+    return circle
 
 # Custom function to draw a triangle
 def drawTriangle(win, p1, p2, p3, colour):
     triangle = Polygon(p1, p2, p3)
     triangle.setFill(colour)
+    # Add the triangle to the items array
     triangle.draw(win)
+    return triangle
 
 # Function to check circle and menu bar overlap
 def circleOverlapMenu(circle, menuBarRectangle):
+    # Get rhe center and radius of the circle
     center = circle.getCenter()
     radius = circle.getRadius()
 
+    # Get the 4 'edge' points of the circle
     x1 = center.getX() - radius
     y1 = center.getY() - radius
     x2 = center.getX() + radius
     y2 = center.getY() + radius
 
-    # Check if any part of the circle is inside the menu bar
+    # Check if the edge points are touching the menu bar
     if x1 <= menuBarRectangle.getP2().getX() and x2 >= menuBarRectangle.getP1().getX() and y1 <= menuBarRectangle.getP2().getY() and y2 >= menuBarRectangle.getP1().getY():
         return True
     else:
         return False
 
+# Main function
 def main():
-    winWidth = 1200
+    winWidth = 1300
     winHeight = 900
 
     # Create the window with the size of 800x600
@@ -137,8 +148,14 @@ def main():
     blackBtnText.draw(win)
 
     # EXTRA TOOL OPTIONS
-    # Raise size of line tool
 
+    clearButton = Rectangle(Point(10, 710), Point(70, 750))
+    clearButton.setFill("lightgrey")
+    clearButton.draw(win)
+    clearButtonText = Text(clearButton.getCenter(), "Clear All")
+    clearButtonText.draw(win)
+
+    # Raise size of line tool
     upSizeBtn = Rectangle(Point(10, 785), Point(70, 825))
     upSizeBtn.setFill("lightgrey")
     upSizeBtn.draw(win)
@@ -162,10 +179,14 @@ def main():
     currentLineWidth = 7
 
     startPoint = None
+    secondPoint = None
+    thirdPoint = None
+    items = []
 
     while True:
         try:
             clickPoint = win.getMouse()
+
         except:
             # Window is closed, so graphics.py can no longer grab the clickPoint. Exit the program
             print("Window is closed now, can't really fetch mouse clicks anymore...")
@@ -317,6 +338,12 @@ def main():
             redBtnText.setText("Red")
             continue
 
+            # Check if the user clicked on the button by checking if the click point is within the buttons coords
+        if clearButton.getP1().getX() <= clickPoint.getX() <= clearButton.getP2().getX() and clearButton.getP1().getY() <= clickPoint.getY() <= clearButton.getP2().getY():
+            for item in items:
+                item.undraw()
+                items = []
+
         if upSizeBtn.getP1().getX() <= clickPoint.getX() <= upSizeBtn.getP2().getX() and upSizeBtn.getP1().getY() <= clickPoint.getY() <= upSizeBtn.getP2().getY():
             if currentTool == "line":
                 currentLineWidth = currentLineWidth + 1
@@ -331,7 +358,7 @@ def main():
                 eraseText.setText("Erase")
                 lineText.setText("Line (S)")
 
-                lineSwapText = Text(Point(600, 50), "Swapped to line!")
+                lineSwapText = Text(Point(650, 50), "Swapped to line!")
                 lineSwapText.draw(win)
                 lineSwapText.setSize(20)
                 lineSwapText.setStyle("bold")
@@ -384,7 +411,8 @@ def main():
                 startPoint = clickPoint
             else:
                 # Call draw line function, with startPoint and the 'second' start point (clickPoint)
-                drawLine(win, startPoint, clickPoint, currentLineWidth, currentColour)
+                line = drawLine(win, startPoint, clickPoint, currentLineWidth, currentColour)
+                items.append(line)
                 startPoint = None
 
         elif currentTool == "rectangle":
@@ -396,7 +424,8 @@ def main():
                 startPoint = clickPoint
             else:
                 # Call draw line function, with startPoint and the 'second' start point (clickPoint)
-                drawRectangle(win, startPoint, clickPoint, currentColour)
+                rect = drawRectangle(win, startPoint, clickPoint, currentColour)
+                items.append(rect)
                 startPoint = None
 
         elif currentTool == "circle":
@@ -410,7 +439,7 @@ def main():
                 radius = abs(startPoint.getX() - clickPoint.getX())
                 circle = Circle(startPoint, radius)
                 if circleOverlapMenu(circle, menuBarRectangle):
-                    circleText_big = Text(Point(600, 50), "Circle too big!")
+                    circleText_big = Text(Point(650, 50), "Circle too big!")
                     circleText_big.draw(win)
                     circleText_big.setSize(20)
                     circleText_big.setStyle("bold")
@@ -420,7 +449,8 @@ def main():
                     circleText_big.undraw() # Undraw the text.
                     print("circle too big")
                 else:
-                    drawCircle(win, startPoint, radius, currentColour)
+                    circle = drawCircle(win, startPoint, radius, currentColour)
+                    items.append(circle)
 
                 startPoint = None
 
@@ -428,15 +458,23 @@ def main():
             # Call menubar click check function
             if 0 <= clickPoint.getX() <= 78 and 0 <= clickPoint.getY() <= winHeight:
                 continue
+            # Different variables to avoid confusion and make it easier to understand
             if startPoint is None:
-                # Set the start point for drawing the line
+                # Set the start point for drawing the triangle
                 startPoint = clickPoint
-            elif startPoint is not None:
-                # Get the SECOND point for drawing it
+            elif secondPoint is None:
+                # Set the second point for drawing the triangle
                 secondPoint = clickPoint
-                # Draw using the start point, a vertical aligned point, and the second point
-                drawTriangle(win, startPoint, Point(startPoint.getX(), secondPoint.getY()), secondPoint, currentColour)
+            elif thirdPoint is None:
+                # Set the third point for drawing the triangle
+                thirdPoint = clickPoint
+                # Draw the triangle using the three points
+                triangle = drawTriangle(win, startPoint, secondPoint, thirdPoint, currentColour)
+                items.append(triangle)
                 startPoint = None
+                secondPoint = None
+                thirdPoint = None
+
 
         elif currentTool == "erase":
             # Call menubar click check function
