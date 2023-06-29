@@ -1,10 +1,10 @@
 from graphics import *
 
 # Custom function to draw a line
-def drawLine(win, start, end, colour):
+def drawLine(win, start, end, width, colour):
     line = Line(start, end)
     line.setFill(colour)
-    line.setWidth(7)
+    line.setWidth(width)
     line.draw(win)
 
 # Custom function to draw a rectangle
@@ -41,18 +41,16 @@ def circleOverlapMenu(circle, menuBarRectangle):
     else:
         return False
 
-
-
 def main():
-    winWidth = 800
-    winHeight = 600
+    winWidth = 1200
+    winHeight = 900
 
     # Create the window with the size of 800x600
     win = GraphWin("PxPaint", winWidth, winHeight)
 
     # Create the menu bar, below the button 'layer'
     menuBarRectangle = Rectangle(Point(0, 0), Point(78, winHeight))
-    menuBarRectangle.setFill("lightgrey")
+    menuBarRectangle.setFill("#EFEEE8")
     menuBarRectangle.draw(win)
 
     # Set the background to white (canvas)
@@ -93,7 +91,6 @@ def main():
     eraseBtn.draw(win)
     eraseText = Text(eraseBtn.getCenter(), "Erase")
     eraseText.draw(win)
-
 
     # COLOURS
     # Selectable red colour button
@@ -139,23 +136,42 @@ def main():
     blackBtnText.setTextColor("white")
     blackBtnText.draw(win)
 
+    # EXTRA TOOL OPTIONS
+    # Raise size of line tool
+
+    upSizeBtn = Rectangle(Point(10, 785), Point(70, 825))
+    upSizeBtn.setFill("lightgrey")
+    upSizeBtn.draw(win)
+    upSizeBtnText = Text(upSizeBtn.getCenter(), "▲ (7)")
+    upSizeBtnText.draw(win)
+
+    # Label for consiseness
+    lineExtrasText = Text(Point(40, 775), "Line Extras")
+    lineExtrasText.draw(win)
+
+    # Lower size of line tool
+    downSizeBtn = Rectangle(Point(10, 835), Point(70, 875))
+    downSizeBtn.setFill("lightgrey")
+    downSizeBtn.draw(win)
+    downSizeBtnText = Text(downSizeBtn.getCenter(), "▼ (7)")
+    downSizeBtnText.draw(win)
+
     # Set the default startup tools (black / line)
     currentColour = "black"
     currentTool = "line"
+    currentLineWidth = 7
 
     startPoint = None
 
     while True:
-
         try:
             clickPoint = win.getMouse()
         except:
-            # When the user closes the window, graphics.py likes to throw an error. This sends a msg to console
-            # explaining and closes the program.
+            # Window is closed, so graphics.py can no longer grab the clickPoint. Exit the program
             print("Window is closed now, can't really fetch mouse clicks anymore...")
             exit()
 
-        # Check if the user clicked on the button by checking if the click point is within the buttons coords
+    # Check if the user clicked on the button by checking if the click point is within the buttons coords
         if lineBtn.getP1().getX() <= clickPoint.getX() <= lineBtn.getP2().getX() and \
                 lineBtn.getP1().getY() <= clickPoint.getY() <= lineBtn.getP2().getY():
             # Current tool is now line
@@ -294,11 +310,64 @@ def main():
             currentColour = "black"
             # Change every colour text to default, except for black colour, which get a (S) marker
             greenBtnText.setText("Green")
-            greenBtnText.setText("Blue")
+            blueBtnText.setText("Blue")
             yellowBtnText.setText("Yellow")
             orangeBtnText.setText("Orange")
             blackBtnText.setText("Black (S)")
             redBtnText.setText("Red")
+            continue
+
+        if upSizeBtn.getP1().getX() <= clickPoint.getX() <= upSizeBtn.getP2().getX() and upSizeBtn.getP1().getY() <= clickPoint.getY() <= upSizeBtn.getP2().getY():
+            if currentTool == "line":
+                currentLineWidth = currentLineWidth + 1
+                upSizeBtnText.setText("▲ " + "(" + str(currentLineWidth) + ")" )
+                downSizeBtnText.setText("▼ " + "(" + str(currentLineWidth) + ")" )
+            else:
+                currentTool = "line"
+                # Change every tool text to default, except for line tool, which get a (S) marker
+                rectText.setText("Rectangle")
+                circleText.setText("Circle")
+                triangleText.setText("Triangle")
+                eraseText.setText("Erase")
+                lineText.setText("Line (S)")
+
+                lineSwapText = Text(Point(600, 50), "Swapped to line!")
+                lineSwapText.draw(win)
+                lineSwapText.setSize(20)
+                lineSwapText.setStyle("bold")
+                time.sleep(0.25)  # Make the thread sleep for 0.25s. This has some drawbacks, but will do for now.
+                lineSwapText.setFill("red") # Wake back up to swap colour, in case covered.
+                time.sleep(0.25) # Let thread sleep again, then
+                lineSwapText.undraw() # Undraw the text.
+                print("swapped to line")
+            continue
+
+        if downSizeBtn.getP1().getX() <= clickPoint.getX() <= downSizeBtn.getP2().getX() and downSizeBtn.getP1().getY() <= clickPoint.getY() <= downSizeBtn.getP2().getY():
+            if currentTool == "line":
+                if currentLineWidth == 1:
+                    continue
+                currentLineWidth = currentLineWidth - 1
+                upSizeBtnText.setText("▲ " + "(" + str(currentLineWidth) + ")" )
+                downSizeBtnText.setText("▼ " + "(" + str(currentLineWidth) + ")" )
+            else:
+                currentTool = "line"
+                # Change every tool text to default, except for line tool, which get a (S) marker
+                rectText.setText("Rectangle")
+                circleText.setText("Circle")
+                triangleText.setText("Triangle")
+                eraseText.setText("Erase")
+                lineText.setText("Line (S)")
+
+                lineSwapText_2 = Text(Point(600, 50), "Swapped to line!")
+                lineSwapText_2.draw(win)
+                lineSwapText_2.setSize(20)
+                lineSwapText_2.setStyle("bold")
+                time.sleep(0.25)  # Make the thread sleep for 0.25s. This has some drawbacks, but will do for now.
+                lineSwapText_2.setFill("red") # Wake back up to swap colour, in case covered.
+                time.sleep(0.25) # Let thread sleep again, then
+                lineSwapText_2.undraw() # Undraw the text.
+                print("swapped to line")
+
             continue
 
         if currentTool is None:
@@ -315,7 +384,7 @@ def main():
                 startPoint = clickPoint
             else:
                 # Call draw line function, with startPoint and the 'second' start point (clickPoint)
-                drawLine(win, startPoint, clickPoint, currentColour)
+                drawLine(win, startPoint, clickPoint, currentLineWidth, currentColour)
                 startPoint = None
 
         elif currentTool == "rectangle":
@@ -341,7 +410,7 @@ def main():
                 radius = abs(startPoint.getX() - clickPoint.getX())
                 circle = Circle(startPoint, radius)
                 if circleOverlapMenu(circle, menuBarRectangle):
-                    circleText_big = Text(Point(400, 50), "Circle too big!")
+                    circleText_big = Text(Point(600, 50), "Circle too big!")
                     circleText_big.draw(win)
                     circleText_big.setSize(20)
                     circleText_big.setStyle("bold")
